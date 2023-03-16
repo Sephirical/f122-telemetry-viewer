@@ -1,0 +1,26 @@
+{
+  "name": "f122-telemetry-viewer-server",
+  "version": "1.0.0",
+  "description": "Server-side for telemetry viewer",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "npm run build && node ./dist/index.js"
+  },
+  "author": "Joseph Tran",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@apollo/server": "^4.5.0",
+    "dotenv": "^16.0.3",
+    "graphql": "^16.6.0",
+    "mysql2": "^3.2.0",
+    "sequelize": "^6.29.3",
+    "sequelize-typescript": "^2.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.3",
+    "typescript": "^4.9.5"
+  }
+}
