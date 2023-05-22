@@ -1,0 +1,1 @@
+export const ERAS = ['F1', 'Classic', 'F2', 'F1 Generic', 'Beta', 'Supercars', 'Esports', 'F2'];
