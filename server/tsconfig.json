@@ -3,10 +3,13 @@
     "rootDirs": ["src"],
     "outDir": "dist",
     "lib": ["es2020"],
-    "target": "es2020",
-    "module": "esnext",
+    "target": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"]
-  }
+    "types": ["node"],
+    "experimentalDecorators": true,
+    "sourceMap": true,
+  },
+  "include": ["src/*.ts", "src/**/*.ts"]
 }
