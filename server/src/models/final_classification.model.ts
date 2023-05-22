@@ -1,8 +1,12 @@
 import { AllowNull, AutoIncrement, BelongsTo, CreatedAt, Column, DataType, Default, ForeignKey, HasMany, Model, UpdatedAt, PrimaryKey, Table } from "sequelize-typescript";
+import Participants from "./participants.model";
+import Session from "./session.model";
+import User from "./user.model";
 
 @Table({ tableName: "final_classification", timestamps: false })
-class FinalClassficiation extends Model {
+class FinalClassfication extends Model {
   @PrimaryKey
+  @ForeignKey(() => Session)
   @AllowNull(false)
   @Column(DataType.BIGINT.UNSIGNED)
   declare session_uid: number;
@@ -13,6 +17,7 @@ class FinalClassficiation extends Model {
   declare index: number;
 
   @PrimaryKey
+  @ForeignKey(() => User)
   @AllowNull(false)
   @Column(DataType.INTEGER.UNSIGNED)
   declare username: number;
@@ -49,6 +54,23 @@ class FinalClassficiation extends Model {
 
   @Column(DataType.TINYINT.UNSIGNED)
   declare num_tyrestints: number;
+
+  @BelongsTo(() => Session, {
+    foreignKey: {
+      name: "session_uid",
+    },
+  })
+  declare Session: Session;
+
+  @BelongsTo(() => User, {
+    foreignKey: {
+      name: "username",
+    },
+  })
+  declare User: User;
+
+  @HasMany(() => Participants)
+  declare Participants: Participants[];
 }
 
-export default FinalClassficiation;
+export default FinalClassfication;
