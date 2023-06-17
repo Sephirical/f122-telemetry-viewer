@@ -27,7 +27,7 @@ class EventPenalty extends Model {
   declare other_index: number;
 
   @Column(DataType.TINYINT.UNSIGNED)
-  declare time: number;
+  declare penalty_time: number;
 
   @Column(DataType.TINYINT.UNSIGNED)
   declare lap_num: number;
@@ -37,6 +37,9 @@ class EventPenalty extends Model {
 
   @Column(DataType.INTEGER.UNSIGNED)
   declare frame: number;
+
+  @Column(DataType.DATE)
+  declare time: Date;
 }
 
 export default EventPenalty;

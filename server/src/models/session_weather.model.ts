@@ -1,7 +1,7 @@
 import { AllowNull, AutoIncrement, BelongsTo, CreatedAt, Column, DataType, Default, ForeignKey, HasMany, Model, UpdatedAt, PrimaryKey, Table } from "sequelize-typescript";
 
-@Table({ tableName: "final_classification_tyrestint", timestamps: false })
-class FinalClassficationTyreStint extends Model {
+@Table({ tableName: "session_weather", timestamps: false })
+class SessionWeather extends Model {
   @PrimaryKey
   @AllowNull(false)
   @Column(DataType.BIGINT.UNSIGNED)
@@ -19,17 +19,32 @@ class FinalClassficationTyreStint extends Model {
 
   @PrimaryKey
   @AllowNull(false)
-  @Column(DataType.TINYINT.UNSIGNED)
-  declare stint: number;
+  @Column(DataType.INTEGER.UNSIGNED)
+  declare frame: number;
 
   @Column(DataType.TINYINT.UNSIGNED)
-  declare tyre_actual: number;
+  declare time_offset: number;
 
   @Column(DataType.TINYINT.UNSIGNED)
-  declare tyre_visual: number;
+  declare weather: number;
+
+  @Column(DataType.TINYINT)
+  declare track_temperature: number;
+
+  @Column(DataType.TINYINT)
+  declare track_delta: number;
+
+  @Column(DataType.TINYINT)
+  declare air_temperature: number;
+
+  @Column(DataType.TINYINT)
+  declare air_delta: number;
 
   @Column(DataType.TINYINT.UNSIGNED)
-  declare tyre_endlap: number;
+  declare rain_percentage: number;
+
+  @Column(DataType.DATE)
+  declare time: Date;
 }
 
-export default FinalClassficationTyreStint;
+export default SessionWeather;

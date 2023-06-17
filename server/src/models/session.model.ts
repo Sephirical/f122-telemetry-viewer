@@ -1,5 +1,4 @@
 import { AllowNull, AutoIncrement, BelongsTo, CreatedAt, Column, DataType, Default, ForeignKey, HasMany, Model, UpdatedAt, PrimaryKey, Table } from "sequelize-typescript";
-import Participants from "./participants.model";
 import User from "./user.model";
 
 @Table({ tableName: "session", updatedAt: false })
@@ -14,6 +13,9 @@ class Session extends Model {
   @AllowNull(false)
   @Column(DataType.INTEGER.UNSIGNED)
   declare username: number;
+
+  @Column(DataType.STRING)
+  declare name: string;
 
   @CreatedAt
   declare created_at: Date;
@@ -45,15 +47,15 @@ class Session extends Model {
   @Column(DataType.TINYINT.UNSIGNED)
   declare ruleset: number;
 
+  @Column(DataType.TINYINT.UNSIGNED)
+  declare session_type: number;
+
   @BelongsTo(() => User, {
     foreignKey: {
       name: "username",
     },
   })
   declare User: User;
-
-  @HasMany(() => Participants)
-  declare Participants: Participants[];
 }
 
 export default Session;

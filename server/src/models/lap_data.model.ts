@@ -4,15 +4,23 @@ import { AllowNull, AutoIncrement, BelongsTo, CreatedAt, Column, DataType, Defau
 class LapData extends Model {
   @PrimaryKey
   @AllowNull(false)
-  @AutoIncrement
-  @Column(DataType.BIGINT.UNSIGNED)
-  declare id: number;
-  
   @Column(DataType.BIGINT.UNSIGNED)
   declare session_uid: number;
 
+  @PrimaryKey
+  @AllowNull(false)
   @Column(DataType.TINYINT.UNSIGNED)
   declare index: number;
+
+  @PrimaryKey
+  @AllowNull(false)
+  @Column(DataType.INTEGER.UNSIGNED)
+  declare username: number;
+
+  @PrimaryKey
+  @AllowNull(false)
+  @Column(DataType.INTEGER.UNSIGNED)
+  declare frame: number;
 
   @Column(DataType.INTEGER.UNSIGNED)
   declare last_laptime: number;
@@ -85,6 +93,18 @@ class LapData extends Model {
 
   @Column(DataType.BOOLEAN)
   declare pitstop_serve_pen: boolean;
+
+  @Column(DataType.DATE)
+  declare time: Date;
+
+  @Column(DataType.SMALLINT.UNSIGNED)
+  declare delta_to_front: number;
+
+  @Column(DataType.SMALLINT.UNSIGNED)
+  declare delta_to_leader: number;
+
+  @Column(DataType.TINYINT.UNSIGNED)
+  declare corner_cut_warnings: number;
 }
 
 export default LapData;
