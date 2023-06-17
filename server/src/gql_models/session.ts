@@ -18,12 +18,17 @@ export const typeDef = `
     session_link: UInt
     gamemode: Int
     ruleset: Int
+    name: String
     User: User
     Participants: [Participants]
   }
 
   type Query {
     sessions(username: UInt!): [Session]
+  }
+
+  type Mutation {
+    updateName(uid: String!, username: UInt!, name: String): Int
   }
 `;
 
@@ -38,16 +43,22 @@ export const resolvers = {
           {
             model: User
           },
-          {
-            model: Participants,
-            on: {
-              uid: sequelize.where(sequelize.col("Session.uid"), "=", sequelize.col("Participants.session_uid")),
-              username: sequelize.where(sequelize.col("Session.username"), "=", sequelize.col("Participants.username")),
-            },
-            attributes: ["index", "name"]
-          }
-        ]
+        ],
+        order: [["created_at", "ASC"]]
       });
+    }
+  },
+  Mutation: {
+    updateName: async (parent, args, contextValue, info) => {
+      const [updated] = await Session.update({
+        name: args.name
+      }, {
+        where: {
+          uid: args.uid,
+          username: args.username
+        }
+      });
+      return updated;
     }
   }
 }
