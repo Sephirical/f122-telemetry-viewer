@@ -24,6 +24,10 @@ import {
   typeDef as LapHistory,
   resolvers as lapHistoryResolvers,
 } from "./gql_models/lap_history";
+import {
+  typeDef as TyreStint,
+  resolvers as tyreStintResolvers,
+} from "./gql_models/final_classification_tyrestint";
 
 const MIN = 0;
 const MAX = Math.pow(2, 32) - 1;
@@ -75,8 +79,8 @@ const MAX = Math.pow(2, 32) - 1;
   // The ApolloServer constructor requires two parameters: your schema
   // definition and your set of resolvers.
   const schema = makeExecutableSchema({
-    typeDefs: mergeTypeDefs([ typeDefs, User, Session, FinalClassfication, Participants, LapHistory ]),
-    resolvers: mergeResolvers([ resolvers, userResolvers, sessionResolvers, finalClassificationResolvers, participantsResolvers, lapHistoryResolvers ])
+    typeDefs: mergeTypeDefs([ typeDefs, User, Session, FinalClassfication, Participants, LapHistory, TyreStint ]),
+    resolvers: mergeResolvers([ resolvers, userResolvers, sessionResolvers, finalClassificationResolvers, participantsResolvers, lapHistoryResolvers, tyreStintResolvers ])
   });
   const server = new ApolloServer({schema});
 
