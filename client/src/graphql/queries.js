@@ -10,6 +10,7 @@ const SESSIONS = gql`
       network_game
       gamemode
       ruleset
+      name
     }
   }
 `;
@@ -33,8 +34,20 @@ const GET_LAP_HISTORY = gql`
   }
 `;
 
+const GET_TYRE_STINTS = gql`
+  query getTyreStints($username: UInt!, $session_uid: String!) {
+    getTyreStints(username: $username, session_uid: $session_uid) {
+      name
+      stint
+      visual
+      stint_length
+    }
+  }
+`;
+
 export {
   SESSIONS,
   USERS,
-  GET_LAP_HISTORY
+  GET_LAP_HISTORY,
+  GET_TYRE_STINTS
 };
