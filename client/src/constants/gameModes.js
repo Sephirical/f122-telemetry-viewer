@@ -12,5 +12,7 @@ export const GAME_MODES = {
   15:	'Online Weekly Event',
   19:	'Career 22',
   20:	'Career 22 Online',
+  21: 'F1 23 Career',
+  22: 'F1 23 Co Op Career',
   127:	'Benchmark',
 };
