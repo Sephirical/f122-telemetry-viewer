@@ -1,0 +1,17 @@
+{
+  "version": "2",
+  "headers": {
+    "content-type": "application/json",
+    "authorization": "Bearer eyJraWQiOiJvbno3eGpmVWtuSkl2NEZMVnJtUUZzc1BMMTVvc1JDeFwvcUNkclU2ckNOaz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYmE4YWJkNS0xOTQ3LTQ1YWMtODVjMS01OGNjMTBjNTRkZGQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfb3VQcFl6ZGJ4IiwidmVyc2lvbiI6MiwiY2xpZW50X2lkIjoiMWwzdGV0Z2J2NTVvbjY1djVlc3JxdHU5aHUiLCJvcmlnaW5fanRpIjoiOWI1NGU0MDktZWJjZi00YjZkLWFlMGYtY2U3YTZkZDQ4ZmMzIiwidG9rZW5fdXNlIjoiYWNjZXNzIiwic2NvcGUiOiJwaG9uZSBvcGVuaWQgZW1haWwiLCJhdXRoX3RpbWUiOjE2ODc0MjgwMTQsImV4cCI6MTY4NzUxNDQxNCwiaWF0IjoxNjg3NDI4MDE0LCJqdGkiOiJhYmNmMjllYy0xYTM0LTQ1OTctOGFkNS1mZmJiZmY5ZTQ4NDgiLCJ1c2VybmFtZSI6InNlcGgifQ.iwZDL0K1b6gE4YfhP2o9e5Op9m-kDtkD21h0yv5jYnaWq1t8jqT5pdHaIjMnWnRi_DLQtt7Hb4N4393yBH9jM5-Nw4RUolbXbtJ4fUV0VrdB-qxoGQnMmS1zQFiKATYgAHRYLUdBtXqDw-OqBNb_jyDGXvrV_684H9juXSh_R99lsvje7SFTPymeQFYjPdcm1dJsxIt1rGpW6KDXVuVpyCyTdgQHQ84ZgR6xPyOCKTvtGHpEz6szooywqFmF2db4-7Kug2hDGocV7oF7ISN2cW6_g4UvS6hGRzn2BGRubBtCBs07CfC8T3ACmvgfQpXijcLw-ndUJk2Mu_PanWoMgg"
+    },
+  "isBase64Encoded": false,
+  "rawQueryString": "",
+  "requestContext": {
+    "http": {
+      "method": "POST"
+    }
+  },
+  "rawPath": "/",
+  "routeKey": "/",
+  "body": "{\"operationName\": null, \"variables\": null, \"query\": \"{ findUser { id username } }\"}"
+}
