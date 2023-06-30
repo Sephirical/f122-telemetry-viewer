@@ -11,8 +11,6 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -23,8 +21,8 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://f1-telemetry-viewer.com/">
+        F1 Telemetry Viewer
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -115,7 +113,7 @@ function DashboardContent({children}) {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              F1 Telemetry Viewer
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
