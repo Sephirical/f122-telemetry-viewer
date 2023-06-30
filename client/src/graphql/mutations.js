@@ -6,6 +6,13 @@ const UPDATE_NAME = gql`
   }
 `;
 
+const CREATE_FINAL_CLASSIFICATIONS = gql`
+  mutation createFinalClassifications($input: CreateFinalClassificationInput) {
+    createFinalClassifications(input: $input)
+  }
+`;
+
 export {
-  UPDATE_NAME
+  UPDATE_NAME,
+  CREATE_FINAL_CLASSIFICATIONS
 }
