@@ -13,10 +13,13 @@
   "type": "commonjs",
   "dependencies": {
     "@apollo/server": "^4.5.0",
+    "@as-integrations/aws-lambda": "^2.0.1",
     "@graphql-tools/merge": "^8.4.0",
     "@graphql-tools/schema": "^9.0.17",
+    "aws-jwt-verify": "^4.0.0",
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
+    "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.2.0",
     "sequelize": "^6.29.3",
     "sequelize-typescript": "^2.1.5"
@@ -24,6 +27,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.15.3",
+    "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^4.9.5"
   }
 }
