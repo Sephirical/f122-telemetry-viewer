@@ -4,20 +4,22 @@ import { AllowNull, AutoIncrement, BelongsTo, CreatedAt, Column, DataType, Defau
 class LapData extends Model {
   @PrimaryKey
   @AllowNull(false)
+  @AutoIncrement
+  @Column(DataType.BIGINT.UNSIGNED)
+  declare id: number;
+  
+  @AllowNull(false)
   @Column(DataType.BIGINT.UNSIGNED)
   declare session_uid: number;
 
-  @PrimaryKey
   @AllowNull(false)
   @Column(DataType.TINYINT.UNSIGNED)
   declare index: number;
 
-  @PrimaryKey
   @AllowNull(false)
   @Column(DataType.INTEGER.UNSIGNED)
   declare username: number;
 
-  @PrimaryKey
   @AllowNull(false)
   @Column(DataType.INTEGER.UNSIGNED)
   declare frame: number;

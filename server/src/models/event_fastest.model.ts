@@ -18,7 +18,7 @@ class EventFastest extends Model {
   declare frame: number;
 
   @Column(DataType.TINYINT.UNSIGNED)
-  declare vehicle_index: number;
+  declare index: number;
 
   @Column(DataType.DATE)
   declare time: Date;
