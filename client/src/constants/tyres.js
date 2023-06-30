@@ -19,5 +19,5 @@ export const TYRES = {
   40: {color: '#ffffff', name: 'C1'},
   16: {color: '#ea2127', name: 'Soft'},
   17: {color: '#fad608', name: 'Medium'},
-  18: {color: '#f9f8f6', name: 'Hard'},
+  18: {color: '#bcbcbc', name: 'Hard'},
 };

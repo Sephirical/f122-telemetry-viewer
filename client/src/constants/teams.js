@@ -5,7 +5,7 @@ const WILLIAMS_COLOR = '#005AFF';
 const ASTON_MARTIN_COLOR = '#006F62';
 const ALPINE_COLOR = '#0090FF';
 const ALPHA_TAURI_COLOR = '#2B4562';
-const HAAS_COLOR = '#FFFFFF';
+const HAAS_COLOR = '#bcbcbc';
 const MCLAREN_COLOR = '#FF8700';
 const ALFA_ROMEO_COLOR = '#900000';
 const LOTUS_COLOR = '#fcd56d';
@@ -130,7 +130,7 @@ export const TEAMS = {
   101: {name: 'McLaren Artura', color: MCLAREN_COLOR},
   102: {name: 'Mercedes AMG GT Black Series Safety Car', color: MERCEDES_COLOR},
   103: {name: 'Mercedes AMG GTR Pro', color: MERCEDES_COLOR},
-  104: {name: 'F1 Custom Team', color: '#FFFFFF'},
+  104: {name: 'F1 Custom Team', color: '#000000'},
   106: {name: 'Prema 21', color: PREMA_COLOR},
   107: {name: 'Uni-Virtuosi 21', color: UNI_VIRTUOSI_COLOR},
   108: {name: 'Carlin 21', color: CARLIN_COLOR},

@@ -1,6 +1,7 @@
 export const GAME_MODES = {
   0:	'Event Mode',
   3:	'Grand Prix',
+  4:	'Grand Prix',
   5:	'Time Trial',
   6:	'Splitscreen',
   7:	'Online Custom',
