@@ -3,10 +3,10 @@ import Session from "../models/session.model";
 import User from "../models/user.model";
 
 export const typeDef = `
-  type Participants {
-    session_uid: String!
-    index: Int!
-    username: UInt!
+  type Overtake {
+    session_uid: String
+    index: Int
+    username: UInt
     is_ai: Boolean
     driver_id: Int
     network_id: Int
@@ -22,13 +22,13 @@ export const typeDef = `
   }
 
   type Query {
-    participants(session_uid: String!, username: UInt!): [Participants]
+    overtakes(session_uid: String!, username: UInt!): [Overtake]
   }
 `;
 
 export const resolvers = {
   Query: {
-    participants: async (parent, args, contextValue, info) => {
+    overtakes: async (parent, args, contextValue, info) => {
       return await Participants.findAll({
         where: {
           username: args.username,

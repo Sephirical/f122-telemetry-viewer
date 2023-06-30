@@ -23,7 +23,10 @@ export const typeDef = `
 export const resolvers = {
   Query: {
     getTyreStints: async (parent, args, contextValue, info) => {
-      const stints: Array<any> = await sequelize.query(`SELECT p.name, t.stint, t.tyre_endlap, t.tyre_visual AS "visual", f.num_laps FROM final_classification_tyrestint AS t JOIN participants AS p ON (t.session_uid = p.session_uid AND t.username = p.username AND t.index = p.index) JOIN final_classification AS f ON (t.session_uid = f.session_uid AND t.username = f.username AND t.index = f.index) WHERE t.session_uid = "${args.session_uid}" AND t.username = ${args.username} ORDER BY p.name ASC, t.stint ASC`, { type: QueryTypes.SELECT });
+      const stints: Array<any> = await sequelize.query(`SELECT p.name, t.stint, t.tyre_endlap, t.tyre_visual AS "visual", f.num_laps FROM final_classification_tyrestint 
+        AS t JOIN participants AS p ON (t.session_uid = p.session_uid AND t.username = p.username AND t.index = p.index) JOIN final_classification AS f ON (t.session_uid = 
+        f.session_uid AND t.username = f.username AND t.index = f.index) WHERE t.session_uid = "${args.session_uid}" AND t.username = ${args.username} ORDER BY p.name ASC, 
+        t.stint ASC`, { type: QueryTypes.SELECT });
       let stintInfo = [];
       stints.map(s => {
         if (s.stint === 0) {
@@ -43,7 +46,6 @@ export const resolvers = {
           })
         }
       });
-      console.log(stintInfo);
       return stintInfo;
     }
   }

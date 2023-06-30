@@ -21,6 +21,7 @@ export const typeDef = `
     name: String
     User: User
     Participants: [Participants]
+    session_type: Int
   }
 
   type Query {
