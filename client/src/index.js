@@ -3,19 +3,45 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, ApolloLink } from '@apollo/client';
 import SessionSelect from './pages/SessionSelect';
+import { Router, RouterSwitch } from './components/RouterSwitch';
+import { setContext } from "@apollo/client/link/context";
+import Dashboard from './components/Dashboard';
+
+const authLink = setContext(async() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return {
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    }
+  }
+});
+
+const link = ApolloLink.from([
+  authLink,
+  new HttpLink({
+    // uri: 'https://rlt066much.execute-api.ap-southeast-2.amazonaws.com/',
+    uri: "http://localhost:4000"
+  })
+])
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000',
-  cache: new InMemoryCache(),
+  link,  
+  cache: new InMemoryCache({
+    addTypename: false
+  })
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <SessionSelect />
+      <Dashboard>
+        <Router />
+      </Dashboard>
     </ApolloProvider>
   </React.StrictMode>
 );
