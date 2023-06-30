@@ -12,7 +12,8 @@ server/node_modules
 # production
 /server/dist
 /client/build
-
+/server/.build
+/server/.serverless
 # misc
 .DS_Store
 .env
