@@ -2,87 +2,22 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import Select from "@mui/material/Select";
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { FIND_USER, GET_LAP_HISTORY, GET_TYRE_STINTS, SESSIONS, USERS } from '../graphql/queries';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, MenuItem, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, MenuItem, Switch, Typography } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import { DataGrid, GridCellModes } from '@mui/x-data-grid';
 import { ERAS, GAME_MODES, RULESETS, SESSION_TYPES, TRACKS, TYRES } from '../constants';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
-import { UPDATE_NAME } from '../graphql/mutations';
+import { TOGGLE_OOR, UPDATE_NAME } from '../graphql/mutations';
 import { useSearchParams } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Participants from '../components/Participants';
 import RaceResults from '../components/RaceResults';
 import LapTimes from '../components/LapTimes';
 import TyreStints from '../components/TyreStints';
+import EditToolbar from '../components/EditToolbar';
+import SpeedTrap from '../components/SpeedTrap';
 
-function EditToolbar(props) {
-  const { selectedCellParams, cellMode, cellModesModel, setCellModesModel } = props;
 
-  const handleSaveOrEdit = () => {
-    if (!selectedCellParams) {
-      return;
-    }
-    const { id, field } = selectedCellParams;
-    if (cellMode === 'edit') {
-      setCellModesModel({
-        ...cellModesModel,
-        [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.View } },
-      });
-    } else {
-      setCellModesModel({
-        ...cellModesModel,
-        [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.Edit } },
-      });
-    }
-  };
-
-  const handleCancel = () => {
-    if (!selectedCellParams) {
-      return;
-    }
-    const { id, field } = selectedCellParams;
-    setCellModesModel({
-      ...cellModesModel,
-      [id]: {
-        ...cellModesModel[id],
-        [field]: { mode: GridCellModes.View, ignoreModifications: true },
-      },
-    });
-  };
-
-  const handleMouseDown = (event) => {
-    // Keep the focus in the cell
-    event.preventDefault();
-  };
-
-  return (
-    <Box
-      sx={{
-        borderBottom: 1,
-        borderColor: 'divider',
-        p: 1,
-      }}
-    >
-      <Button
-        onClick={handleSaveOrEdit}
-        onMouseDown={handleMouseDown}
-        disabled={!selectedCellParams}
-        variant="outlined"
-      >
-        {cellMode === 'edit' ? 'Save' : 'Edit'}
-      </Button>
-      <Button
-        onClick={handleCancel}
-        onMouseDown={handleMouseDown}
-        disabled={cellMode === 'view'}
-        variant="outlined"
-        sx={{ ml: 1 }}
-      >
-        Cancel
-      </Button>
-    </Box>
-  );
-}
 
 export default function SessionSelect() {
   const [users, setUsers] = useState([]);
@@ -127,6 +62,21 @@ export default function SessionSelect() {
         findUser();
       }
     });
+
+    // const token = "eyJraWQiOiJhMzQ3YTFjZS0yZTNlLTRiNzMtYjBhZC03NmI1YWUxYzdjYzMiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhY2NvdW50cy5lYS5jb20iLCJqdGkiOiJTa0V3T2pNdU1Eb3hMakE2TjJJME9EWXlaVGd0TldKbU9TMDBNamhpTFdGaU5qa3RabVkxWkRSa056VTRaV015IiwiYXpwIjoiUkFDRU5FVF8xX0pTX1dFQl9BUFAiLCJpYXQiOjE2OTAyNzA3OTEsImV4cCI6MTY5MDI4NTE5MSwidmVyIjoxLCJuZXh1cyI6eyJyc3ZkIjp7ImVmcGx0eSI6IjEzIn0sImNsaSI6IlJBQ0VORVRfMV9KU19XRUJfQVBQIiwicHJkIjoiZWJiZTIwOTEtZTkxZi03ZmZkLTI3ZjEtYTc3ZDJkM2RhOTI1Iiwic2NvIjoib2ZmbGluZSBzZWN1cml0eS50d29mYWN0b3Igc2lnbmluIGRwLmNvbW1lcmNlLmNsaWVudC5kZWZhdWx0IGRwLmlkZW50aXR5LmNsaWVudC5kZWZhdWx0IGRwLnByb2dyZXNzaW9uLmNsaWVudC5kZWZhdWx0IGRwLmZpcnN0cGFydHljb21tZXJjZS5jbGllbnQuZGVmYXVsdCIsInBpZCI6IjEwMDE5Mzg3MTYzNTEiLCJwdHkiOiJOVUNMRVVTIiwidWlkIjoiMTAwMTkzODcxNjM1MSIsImR2aWQiOiIwMjgzZDRlZi1hZGI5LTRlN2ItODE5YS1kNWUzZmI1NjMzNWEiLCJwbHR5cCI6IldFQiIsInBuaWQiOiJFQSIsImRwaWQiOiJXRUIiLCJzdHBzIjoiT0ZGIiwidWRnIjpmYWxzZSwiY250eSI6IjEiLCJhdXNyYyI6IlJBQ0VORVRfMV9KU19XRUJfQVBQIiwiaXBnZW8iOnsiaXAiOiIxMjEuOTkuKi4qIiwiY3R5IjoiTloiLCJyZWciOiJBdWNrbGFuZCIsImNpdCI6IkF1Y2tsYW5kIiwiaXNwIjoiMmRlZ3JlZXMiLCJsYXQiOiItMzYuODUwNiIsImxndCI6IjE3NC43Njc5IiwidHoiOiIxMiJ9LCJ1aWYiOnsidWRnIjpmYWxzZSwiY3R5IjoiQVUiLCJsYW4iOiJlbiIsInN0YSI6IkFDVElWRSIsImFubyI6ZmFsc2UsImFnZSI6MzMsImFncCI6IkFEVUxUIn0sInBzaWYiOlt7ImlkIjoxNDU5Mjg2NTEzLCJucyI6ImNlbV9lYV9pZCIsImRpcyI6IlNlcGhpcmljYWxQYW5kYSIsIm5pYyI6IlNlcGhpcmljYWwifV0sImVuYyI6IjByelhoNXRNRjIxUThFMUJnUHZWS1BOUlZaeHRtYjMraE1BMTZLK0xidk9obFI3RDZWcEFhWC8rTGcwb0twZUdvZVFqRmF2TEdvTENRazROUUpCR3NFUEFkaXhLam1QNVJJOUFKbVhvNTUrZ2h3WjlLclE3dm9pcXEvaGlBM1Z3ekVpakNZRkF0M3kvNXZGZFFKemttbzZ1c244aDlweFRHdUN5a2Jra1R3Z0V5dmplbzhJanhSalI2SHlPOFdmMEF6ZzNDaXQ2TDhJVUlRMDVGZDNJUE5wL3dzd0Z3MXYvaU5McmZ4RFd5TjRPemhGM3FYVU8zUGJRMk1xdk1vSUo1RUFJSXhjUzFRaTdpVWROYUxSOUdpa2ZhM2JENERhMnIvcXdsYVYzWGNCTkNaNGdOc0JuRVhrVHlRanhlQVFZYzFJY1pKSnBpY28wbmVhK3VVbHBvQTJRR2EyOFovTFdYd2hyckg1VHBNZ2VIYnVnd2x2NHJ5Rk5rRUtBSHllRDJqWkVpWFdwMEVzbFRyZituZkNjdVpTZlR3WE5rQ2lCZFhuMDhmTDVwU0xWN2xtYjVJUEljaWhJOUlYUDRrVExpbEtvcktPVWF6WTdqdzB1ei9LVmVBYXo5Y1dLVnJhWURiTVJkYmtHUG5WYzJXeEkrVHFtcEN5LzVsYjlBMzlJbEhraUhDQ3F2bnlZZFNpazlaRVZqcGlXcHViQ0VDWUFGUGIwaVBEbzhHenZsOENQOEZuMHA4VG1QTjVXZEJscGV5elVyVlNKQkd2SmdSaldudllpVHQzWURiN1ZkSEdIRXptTENZbGMzdWdsTEF6ejNUSzMrUjNwZWJXM1QyaUV6dVI2MUUwcUpyQ0xObWk3V1VXUEZnbWo4QWRKcWl6M0RGNE0rdzdZV09MbFkwWFp4UjZKVTdQdUQxeU9RdjlJVlZGQkFlcjZzR3JONzV1ZUpCK2J6MDZ6dXBHRExiWU5YM2NzYjU1NWdhc3RDSlRtVzBWK2U1ZTJVUmhibFJuME5zQmFpQ2s4QkphQVNDYytIdHFBWmRhRXRxSGE3NU5YVk5WUWlkZTJqbjNQeVVtc1Q2VC9EYnY0MElDUUJQZnZWVFVjMmJKYm5uWGkxTFU0NXBhc0QwUmhqK0hqZCsrd2EycHk1Sk1uSUh5bnpidEpxTUlNVHVyNVMwUXhPb0htZm1HaUxxV284c3Yrdkczd1Iva2pnNmRaZlExZWwzeHltc0Rmc1A2NWxNU0VmUEhzR2M0STd0ZDZmbVBPanNqQ2NqNWVvaTdBWjNBUEdRWEpMNnNJZ2c9PSJ9fQ.JR8Gp9dr4N8rxyNKoo5pJgTfT2qkKHzPSiPU7o2f0r7WDInixoZg4dDrx_2PqU3hNsEV8VkKi2iXDiN8UE3FrPe0QhvzP7yXeZI9On84u0CfajB088Pss00lcDg1tuITfThyZBUBGX1zfaKadSgHEszGTQmyFFA3VJdjHuTQtogdUu8SfwdWkxxntNeVVqVMSk6I_fetCjlmHaH2Vxnb8z-Jm_xiXeKxrqCQuaO9XZ5l3cNmVPriefLQF3Cb1GjCC9gtqfslj1xe1jFbQx5e9UqlGnfypQJ3e0iJwkqBd12zRBJnlaAABaatreohEe7Zy5H6-qRAdMLyx_yHuYNohA";
+
+    // fetch("https://web-api.racenet.com/api/F123Stats/leaderboard/14?platform=3&pageNumber=1&mode=00&weather=D&pageSize=20&playerFocus=false&type=0&version=1&isCrossPlay=true", {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Authorization": `Bearer ${token}`
+    //   }
+    // })
+    // .then((response) => response.json())
+    // .then((json) => {
+    //   console.log(json);
+    // });
+
   }, []);
 
   const handleCellFocus = useCallback((event) => {
@@ -192,6 +142,15 @@ export default function SessionSelect() {
     nextFetchPolicy: 'cache-first',
   });
   const [updateName] = useMutation(UPDATE_NAME);
+  const [toggleOOR] = useMutation(TOGGLE_OOR, {
+    onCompleted: (toggle) => {
+      getSessions({
+        variables: {
+          username: Number(localStorage.getItem("id"))
+        }
+      });
+    }
+  });
   // useEffect(() => {
   //   getUsers();
   // }, []);
@@ -214,7 +173,23 @@ export default function SessionSelect() {
     setSelectedUser(event.target.value);
   }
 
+  const handleOORToggle = (event, row) => {
+    toggleOOR({
+      variables: {
+        uid: row.uid,
+        username: row.username,
+        value: event.target.checked
+      }
+    })
+    // console.log(event.target.checked, row);
+  }
+
+  const renderOOR = (params) => {
+    return <Switch checked={params.value} onChange={(e) => handleOORToggle(e, params.row)} />;
+  }
+
   const columns = [
+    { field: "is_oor", headerName: "OOR Session?", flex: 1, renderCell: renderOOR},
     { field: "uid", headerName: "Session ID", flex: 2},
     { field: "name", headerName: "Name", flex: 2, editable: true},
     { field: "network_game", headerName: "Online?", flex: 1, valueGetter: ({ value }) => value ? "Yes" : "No"},
@@ -302,7 +277,7 @@ export default function SessionSelect() {
                 <Typography>Participants</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Participants session_uid={session} />
+                <Participants session_uid={session} is_oor={sessions.find(s => s.uid === session).is_oor} />
               </AccordionDetails>
             </Accordion>
             <Accordion>
@@ -339,6 +314,18 @@ export default function SessionSelect() {
               </AccordionSummary>
               <AccordionDetails>
                 <TyreStints session_uid={session} />
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="speedtrap-content"
+                id="speedtrap-header"
+              >
+                <Typography>Speed Trap</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <SpeedTrap session_uid={session} />
               </AccordionDetails>
             </Accordion>
           </>

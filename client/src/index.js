@@ -8,6 +8,8 @@ import SessionSelect from './pages/SessionSelect';
 import { Router, RouterSwitch } from './components/RouterSwitch';
 import { setContext } from "@apollo/client/link/context";
 import Dashboard from './components/Dashboard';
+import { SnackbarProvider } from "notistack";
+import { Fade } from '@mui/material';
 
 const authLink = setContext(async() => {
   const token = localStorage.getItem("token");
@@ -39,9 +41,16 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <Dashboard>
-        <Router />
-      </Dashboard>
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={5000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        TransitionComponent={Fade}
+      >
+        <Dashboard>
+          <Router />
+        </Dashboard>
+      </SnackbarProvider>
     </ApolloProvider>
   </React.StrictMode>
 );

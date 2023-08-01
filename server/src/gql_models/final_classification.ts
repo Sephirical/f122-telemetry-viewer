@@ -28,21 +28,21 @@ export const typeDef = `
 
   input FinalClassificationInput {
     session_uid: String
-    index: String
+    index: Int
     name: String
-    team_id: String
-    username: String
-    position: String
-    num_laps: String
-    grid_position: String
-    points: String
-    num_pitstops: String
-    result_status: String
-    best_laptime: String
-    total_racetime: String
-    penalties_time: String
-    num_penalties: String
-    num_tyrestints: String
+    team_id: Int
+    username: UInt
+    position: Int
+    num_laps: Int
+    grid_position: Int
+    points: Int
+    num_pitstops: Int
+    result_status: Int
+    best_laptime: UInt
+    total_racetime: Float
+    penalties_time: Int
+    num_penalties: Int
+    num_tyrestints: Int
     team: String
   }
 
@@ -89,11 +89,11 @@ export const resolvers = {
     createFinalClassifications: async (parent, args, contextValue, info) => {
       let insert_rows = [];
       args.input.classifications.map((c, i) => {
-        insert_rows[i] = {
+        insert_rows.push({
           ...c,
-          session_uid: args.session_uid,
-          username: args.session_uid
-        }
+          session_uid: args.input.session_uid,
+          username: args.input.username
+        });
       });
       const classifications = await FinalClassfication.bulkCreate(insert_rows);
       if (classifications.length > 0) {

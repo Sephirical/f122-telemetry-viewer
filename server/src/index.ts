@@ -29,6 +29,14 @@ import {
   typeDef as TyreStint,
   resolvers as tyreStintResolvers,
 } from "./gql_models/final_classification_tyrestint";
+import {
+  typeDef as OORDriver,
+  resolvers as oorDriverResolvers,
+} from "./gql_models/oor_driver";
+import {
+  typeDef as SpeedTrap,
+  resolvers as speedTrapResolvers,
+} from "./gql_models/speedtrap";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -109,8 +117,8 @@ const resolvers = {
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const schema = makeExecutableSchema({
-  typeDefs: mergeTypeDefs([ typeDefs, User, Session, FinalClassfication, Participants, LapHistory, TyreStint ]),
-  resolvers: mergeResolvers([ resolvers, userResolvers, sessionResolvers, finalClassificationResolvers, participantsResolvers, lapHistoryResolvers, tyreStintResolvers ]),
+  typeDefs: mergeTypeDefs([ typeDefs, User, Session, FinalClassfication, Participants, LapHistory, TyreStint, OORDriver, SpeedTrap ]),
+  resolvers: mergeResolvers([ resolvers, userResolvers, sessionResolvers, finalClassificationResolvers, participantsResolvers, lapHistoryResolvers, tyreStintResolvers, oorDriverResolvers, speedTrapResolvers ]),
 });
 const server = new ApolloServer({schema});
 sequelize.authenticate;

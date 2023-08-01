@@ -50,6 +50,9 @@ class Session extends Model {
   @Column(DataType.TINYINT.UNSIGNED)
   declare session_type: number;
 
+  @Column(DataType.BOOLEAN)
+  declare is_oor: boolean;
+
   @BelongsTo(() => User, {
     foreignKey: {
       name: "username",

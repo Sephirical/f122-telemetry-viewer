@@ -3,6 +3,7 @@ import { GET_LAP_HISTORY } from '../graphql/queries';
 import { useLazyQuery } from '@apollo/client';
 import { TEAMS } from '../constants';
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { Button } from '@mui/material';
 
 export default function LapTimes({ session_uid }) {
   const [laps, setLaps] = useState([]);
@@ -148,6 +149,9 @@ export default function LapTimes({ session_uid }) {
           />
           <Tooltip content={<CustomToolTip />} />
           <Legend onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick} />
+          <Button>
+            Hi
+          </Button>
           { showDriver && drivers.map((d, i) => {
             return (
               <Line type="linear" dataKey={d} stroke={colors[d]} strokeWidth={3} strokeOpacity={opacity[d]} hide={showDriver[d]} activeDot={{ r: 8 }} connectNulls={false} />

@@ -12,6 +12,7 @@ const SESSIONS = gql`
       ruleset
       name
       session_type
+      is_oor
     }
   }
 `;
@@ -112,6 +113,24 @@ const OOR_FINAL_CLASSIFICATIONS = gql`
   }
 `;
 
+const GET_OOR_DRIVERS = gql`
+  query getOORDrivers {
+    getOORDrivers {
+      id
+      name
+    }
+  }
+`;
+
+const FASTEST_SPEED_TRAPS = gql`
+  query fastestSpeedTraps($username: UInt!, $session_uid: String!) {
+    fastestSpeedTraps(username: $username, session_uid: $session_uid) {
+      name
+      speed
+    }
+  }
+`;
+
 export {
   SESSIONS,
   USERS,
@@ -120,5 +139,7 @@ export {
   FIND_USER,
   PARTICIPANTS,
   FINAL_CLASSIFICATIONS,
-  OOR_FINAL_CLASSIFICATIONS
+  OOR_FINAL_CLASSIFICATIONS,
+  GET_OOR_DRIVERS,
+  FASTEST_SPEED_TRAPS
 };

@@ -24,6 +24,10 @@ export const typeDef = `
   type Query {
     participants(session_uid: String!, username: UInt!): [Participants]
   }
+
+  type Mutation {
+    updateName(uid: String!, username: UInt!, index: Int!, name: String): Int
+  }
 `;
 
 export const resolvers = {
@@ -35,6 +39,20 @@ export const resolvers = {
           session_uid: args.session_uid
         },
       });
+    }
+  },
+  Mutation: {
+    updateName: async (parent, args, contextValue, info) => {
+      const [updated] = await Participants.update({
+        name: args.name
+      }, {
+        where: {
+          session_uid: args.uid,
+          username: args.username,
+          index: args.index,
+        }
+      });
+      return updated;
     }
   }
 }

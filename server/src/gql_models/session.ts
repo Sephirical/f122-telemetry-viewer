@@ -22,6 +22,7 @@ export const typeDef = `
     User: User
     Participants: [Participants]
     session_type: Int
+    is_oor: Boolean
   }
 
   type Query {
@@ -30,6 +31,7 @@ export const typeDef = `
 
   type Mutation {
     updateName(uid: String!, username: UInt!, name: String): Int
+    toggleOOR(uid: String!, username: UInt!, value: Boolean!): Int
   }
 `;
 
@@ -53,6 +55,17 @@ export const resolvers = {
     updateName: async (parent, args, contextValue, info) => {
       const [updated] = await Session.update({
         name: args.name
+      }, {
+        where: {
+          uid: args.uid,
+          username: args.username
+        }
+      });
+      return updated;
+    },
+    toggleOOR: async (parent, args, contextValue, info) => {
+      const [updated] = await Session.update({
+        is_oor: args.value
       }, {
         where: {
           uid: args.uid,

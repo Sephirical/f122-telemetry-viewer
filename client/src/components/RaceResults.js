@@ -54,12 +54,20 @@ export default function RaceResults({ session_uid }) {
       }
       const { result } = evt.target;
       const records = parse(result, {
-        columns: ["index", "position", "grid_position"],
+        columns: ["index", "position", "grid_position", "result_status"],
         delimiter: ",",
         trim: true,
         skip_empty_lines: true
       });
-      setCsvData(records);
+      const modRecords = records.map(r => {
+        return {
+          index: Number(r.index),
+          position: Number(r.position),
+          grid_position: Number(r.grid_position),
+          result_status: Number(r.result_status)
+        }
+      });
+      setCsvData(modRecords);
     };
     reader.readAsBinaryString(file);
   };
@@ -95,7 +103,7 @@ export default function RaceResults({ session_uid }) {
       // Pushing Object values into array
       // with comma separation
       oorResults.map(r => {
-        let values = Object.values(r);
+        // let values = Object.values(r);
         
         const values = Object.values(r).join(',');
         csvRows.push(values);
@@ -134,7 +142,7 @@ export default function RaceResults({ session_uid }) {
   
   const columns = [
     { field: "position", headerName: "Finish Position", flex: 1},
-    { field: "name", headerName: "Name", flex: 1},
+    { field: "name", headerName: "Name", flex: 2},
     { field: "team_id", headerName: "Team", flex: 1, valueGetter: ({ value }) => TEAMS[value]?.name},
     { field: "grid_position", headerName: "Starting Position", flex: 1},
     { field: "num_laps", headerName: "Laps", flex: 1},
@@ -174,7 +182,7 @@ export default function RaceResults({ session_uid }) {
             return "DSQ";
           } else if (params.row.num_laps < leader.num_laps) {
             const lap_diff = leader.num_laps - params.row.num_laps;
-            return `+${lap_diff} Lap${lap_diff > 1 && 's'}`;
+            return `+${lap_diff} Lap${lap_diff > 1 ? 's' : ''}`;
           } else {
             const timeSplit = (params.value + params.row.penalties_time - leader.total_racetime - leader.penalties_time).toString().split(".");
             const ms = ("000" + timeSplit[1]).slice(-3);
