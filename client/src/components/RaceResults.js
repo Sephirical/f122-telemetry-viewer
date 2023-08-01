@@ -21,7 +21,12 @@ export default function RaceResults({ session_uid }) {
         setResults(classifications.finalClassifications);
         const fastestLaps = classifications.finalClassifications.map(c => c.best_laptime);
         fastestLaps.sort();
-        setFastestLap(fastestLaps[0]);
+        for (let i = 0; i < fastestLaps.length; i++) {
+          if (fastestLaps[i] > 0) {
+            setFastestLap(fastestLaps[i]);
+            break;
+          }
+        }
       }
     },
     fetchPolicy: 'network-only',
@@ -152,7 +157,7 @@ export default function RaceResults({ session_uid }) {
       headerName: "Best Lap Time",
       flex: 1, 
       renderCell: ({ value }) => { 
-        if (!value) return null;
+        if (!value) return "-:--:--";
         // const timeSplit = value.toString().split("."); 
         const ms = ("000" + value % 1000).slice(-3);
         const sec = ("00" + Math.floor((value / 1000) % 60)).slice(-2);
@@ -184,7 +189,7 @@ export default function RaceResults({ session_uid }) {
             const lap_diff = leader.num_laps - params.row.num_laps;
             return `+${lap_diff} Lap${lap_diff > 1 ? 's' : ''}`;
           } else {
-            const timeSplit = (params.value + params.row.penalties_time - leader.total_racetime - leader.penalties_time).toString().split(".");
+            const timeSplit = (params.value + params.row.penalties_time - leader.total_racetime - leader.penalties_time).toFixed(3).split(".");
             const ms = ("000" + timeSplit[1]).slice(-3);
             const sec = ("00" + Number(timeSplit[0]) % 60).slice(-2);
             const min = Math.floor(Number(timeSplit[0] / 60));
