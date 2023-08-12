@@ -112,7 +112,7 @@ export const resolvers = {
         });
       }
 
-      await Participants.update({
+      const updated = await Participants.update({
         name: driver.name,
       }, {
         where: {
@@ -121,7 +121,7 @@ export const resolvers = {
           index: args.index,
         }
       });
-      return 1;
+      return updated[0];
     }
   }
 }

@@ -218,12 +218,16 @@ export default function SessionSelect() {
       { sessions.length > 0 && (
         <DataGrid
           columns={columns} 
-          rows={sessions} 
+          rows={sessions}
           getRowId={({ uid }) => uid}
           disableMultipleRowSelection={true}
           checkboxSelection
           onRowSelectionModelChange={(newSelectionModel) => {
-            setSelectedSession(newSelectionModel)
+            if (newSelectionModel.length > 0) {
+              setSelectedSession([newSelectionModel[1]]);
+            } else {
+              setSelectedSession(newSelectionModel);
+            }            
           }}
           rowSelectionModel={selectedSession}
           onCellKeyDown={handleCellKeyDown}
@@ -277,7 +281,7 @@ export default function SessionSelect() {
                 <Typography>Participants</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Participants session_uid={session} is_oor={sessions.find(s => s.uid === session).is_oor} />
+                <Participants session_uid={session} is_oor={sessions.find(s => s.uid === session).is_oor} network_game={sessions.find(s => s.uid === session).network_game} />
               </AccordionDetails>
             </Accordion>
             <Accordion>
@@ -289,7 +293,7 @@ export default function SessionSelect() {
                 <Typography>Race Results</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <RaceResults session_uid={session} />
+                <RaceResults session_uid={session} session_type={sessions.find(s => s.uid === session).session_type} />
               </AccordionDetails>
             </Accordion>
             <Accordion>

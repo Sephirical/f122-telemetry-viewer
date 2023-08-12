@@ -8,7 +8,7 @@ import { Button, Typography } from '@mui/material';
 import { parse } from "csv-parse/browser/esm/sync";
 import { CREATE_FINAL_CLASSIFICATIONS } from '../graphql/mutations';
 
-export default function RaceResults({ session_uid }) {
+export default function RaceResults({ session_uid, session_type }) {
   const [results, setResults] = useState([]);
   const [oorResults, setOorResults] = useState([]);
   const [fastestLap, setFastestLap] = useState(-1);
@@ -19,8 +19,8 @@ export default function RaceResults({ session_uid }) {
     onCompleted: (classifications) => {
       if (classifications?.finalClassifications.length > 0) {
         setResults(classifications.finalClassifications);
-        const fastestLaps = classifications.finalClassifications.map(c => c.best_laptime);
-        fastestLaps.sort();
+        const fastestLaps = classifications.finalClassifications.map(c => c.best_laptime );
+        if ([10, 11, 12].includes(session_type)) fastestLaps.sort();
         for (let i = 0; i < fastestLaps.length; i++) {
           if (fastestLaps[i] > 0) {
             setFastestLap(fastestLaps[i]);
@@ -148,7 +148,7 @@ export default function RaceResults({ session_uid }) {
   const columns = [
     { field: "position", headerName: "Finish Position", flex: 1},
     { field: "name", headerName: "Name", flex: 2},
-    { field: "team_id", headerName: "Team", flex: 1, valueGetter: ({ value }) => TEAMS[value]?.name},
+    { field: "team_id", headerName: "Team", flex: 2, valueGetter: ({ value }) => TEAMS[value]?.name},
     { field: "grid_position", headerName: "Starting Position", flex: 1},
     { field: "num_laps", headerName: "Laps", flex: 1},
     { field: "num_pitstops", headerName: "# Of Pitstops", flex: 1},
@@ -158,13 +158,35 @@ export default function RaceResults({ session_uid }) {
       flex: 1, 
       renderCell: ({ value }) => { 
         if (!value) return "-:--:--";
-        // const timeSplit = value.toString().split("."); 
         const ms = ("000" + value % 1000).slice(-3);
         const sec = ("00" + Math.floor((value / 1000) % 60)).slice(-2);
         const min = Math.floor(value / 60000);
         return <Typography color={value === fastestLap ? "#8d589e" : "#000000"} fontSize="0.875rem">
           {`${min}:${sec}.${ms}`}
         </Typography>;
+      }
+    },
+    {
+      field: "interval",
+      headerName: "Interval",
+      flex: 1,
+      valueGetter: (params) => {
+        if (params.row.position === 1) {
+          return "";
+        } else {
+          if (params.row.result_status === 4) {
+            return "DNF";
+          } else if (params.row.result_status === 5) {
+            return "DSQ";
+          } else {
+            const leader = results[0];
+            const interval = params.row.best_laptime - leader.best_laptime;
+            const ms = ("000" + interval % 1000).slice(-3);
+            const sec = ("00" + Math.floor((interval / 1000) % 60)).slice(-2);
+            const min = Math.floor(interval / 60000);
+            return `+${min > 0 ? min + ":" + sec : Number(sec)}.${ms}`;
+          }
+        }
       }
     },
     { 
@@ -232,6 +254,15 @@ export default function RaceResults({ session_uid }) {
           rows={results} 
           getRowId={({ position }) => position}
           isRowSelectable={() => false}
+          columnVisibilityModel={{
+            grid_position: [10, 11, 12].includes(session_type),
+            num_laps: [10, 11, 12].includes(session_type),
+            num_pitstops: [10, 11, 12].includes(session_type),
+            total_racetime: [10, 11, 12].includes(session_type),
+            num_penalties: [10, 11, 12].includes(session_type),
+            penalties_time: [10, 11, 12].includes(session_type),
+            interval: ![10, 11, 12].includes(session_type)
+          }}
           initialState={{
             pagination: {
               paginationModel: { pageSize: 22, page: 0 },
