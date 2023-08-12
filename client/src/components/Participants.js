@@ -11,7 +11,7 @@ import { Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, Dialog
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { enqueueSnackbar } from 'notistack';
 
-export default function Participants({ session_uid, is_oor }) {
+export default function Participants({ session_uid, is_oor, network_game }) {
   const [drivers, setDrivers] = useState([]);
   const [selectedCellParams, setSelectedCellParams] = useState(null);
   const [cellModesModel, setCellModesModel] = useState({});
@@ -36,7 +36,9 @@ export default function Participants({ session_uid, is_oor }) {
       if (getOORDrivers.getOORDrivers.length > 0) {
         setDriverList(getOORDrivers.getOORDrivers);
       }
-    }
+    },
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
   });
 
   const [setDriverNames] = useMutation(SET_DRIVER_NAMES, {
@@ -78,43 +80,23 @@ export default function Participants({ session_uid, is_oor }) {
     onCompleted: (aliasStatus) => {
       setPickedDriver(null);
       setShowMatchDialog(false);
-      getParticipants({
-        variables: {
-          username: Number(localStorage.getItem("id")),
-          session_uid
-        }
-      });
+      if (aliasStatus.setAlias) {
+        enqueueSnackbar(`Alias successfully added.`, {
+          variant: "success"
+        });
+        getParticipants({
+          variables: {
+            username: Number(localStorage.getItem("id")),
+            session_uid
+          }
+        });
+      } else {
+        enqueueSnackbar(`No alias added.`, {
+          variant: "warning"
+        });
+      }
     }
   });
-
-  const handleCellFocus = useCallback((event) => {
-    const row = event.currentTarget.parentElement;
-    const id = row.dataset.id;
-    const field = event.currentTarget.dataset.field;
-    setSelectedCellParams({ id, field });
-  }, []);
-
-  const cellMode = useMemo(() => {
-    if (!selectedCellParams) {
-      return 'view';
-    }
-    const { id, field } = selectedCellParams;
-    return cellModesModel[id]?.[field]?.mode || 'view';
-  }, [cellModesModel, selectedCellParams]);
-
-  const handleCellKeyDown = useCallback(
-    (params, event) => {
-      if (cellMode === 'edit') {
-        // Prevents calling event.preventDefault() if Tab is pressed on a cell in edit mode
-        event.defaultMuiPrevented = true;
-      }
-    },
-    [cellMode],
-  );
-
-  const handleCellEditStop = useCallback((params, event) => {
-    event.defaultMuiPrevented = true;
-  }, []);
 
   const handleDriverClick = () => {
     setDriverNames({
@@ -170,6 +152,11 @@ export default function Participants({ session_uid, is_oor }) {
     });
   }
 
+  const handleAddAliasCancel = () => {
+    setPickedDriver(null);
+    setShowMatchDialog(false);
+  }
+
   useEffect(() => {
     if (session_uid) {
       getParticipants({
@@ -188,7 +175,7 @@ export default function Participants({ session_uid, is_oor }) {
   const columns = [
     { field: "actions", headerName: "Actions", flex: 1, renderCell: renderSetDriver},
     { field: "index", headerName: "Vehicle Index", flex: 1},
-    { field: "name", headerName: "Name", flex: 3, editable: true},
+    { field: "name", headerName: "Name", flex: 3},
     { field: "team_id", headerName: "Team", flex: 2, valueGetter: ({ value }) => TEAMS[value]?.name},
     { field: "is_ai", headerName: "AI?", flex: 1, renderCell: (params) => {if (params.value) return <DoneIcon />; return <CloseIcon />}},
     { field: "is_my_team", headerName: "MyTeam?", flex: 1, renderCell: (params) => {if (params.value) return <DoneIcon />; return <CloseIcon />}},
@@ -225,7 +212,7 @@ export default function Participants({ session_uid, is_oor }) {
                 </DialogContent>
                 <DialogActions>
                   <Button variant="text" onClick={handleAddAliasCreate}>Set Driver</Button>
-                  <Button variant="text" onClick={/*handleAddDriverCancel*/() => setShowMatchDialog(false)}>Cancel</Button>
+                  <Button variant="text" onClick={handleAddAliasCancel}>Cancel</Button>
                 </DialogActions>
               </Dialog>
               <Dialog open={showDriverDialog} disableEscapeKeyDown onClose={() => {}}>
@@ -263,7 +250,11 @@ export default function Participants({ session_uid, is_oor }) {
           <DataGrid
             sx={{ mt: 2 }}
             columnVisibilityModel={{
-              actions: is_oor
+              actions: is_oor,
+              is_ai: !network_game,
+              is_my_team: !network_game,
+              telemetry: network_game,
+              show_name: network_game
             }}
             columns={columns} 
             rows={drivers} 
